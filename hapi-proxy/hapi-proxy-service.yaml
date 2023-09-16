@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hapi-proxy-svc
+spec:
+  selector:
+    app: hapi-proxy
+  type: NodePort
+  ports:
+    - name: hapi-proxy-http
+      port: 9001
+      targetPort: 9001
+      nodePort: 30081
+      protocol: TCP
+
+

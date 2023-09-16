@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hapi-fhir-deployment
+  labels:
+    app: hapi-fhir
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hapi-fhir
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: hapi-fhir
+    spec:
+      containers:
+        - name: hapi-fhir
+          image: conceptant/hapi-fhir:latest # Update Image Name
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 8080
+          # Readiness and Liveness Probe
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          volumeMounts:
+            - mountPath: /app
+              name: hapi-fhir-storage
+      restartPolicy: Always
+      volumes:
+        - name: hapi-fhir-storage
+          persistentVolumeClaim:
+            claimName: hapi-fhir-storage-vol-claim

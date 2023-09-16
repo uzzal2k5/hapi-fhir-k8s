@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hapi-proxy-deployment
+  labels:
+    app: hapi-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hapi-proxy
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: hapi-proxy
+    spec:
+      containers:
+        - name: hapi-proxy
+          image: uzzal2k5/hapi-proxy:latest # Update Image Name
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 9001
+          # Readiness and Liveness Probe
+          readinessProbe:
+            tcpSocket:
+              port: 9001
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 9001
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          volumeMounts:
+            - mountPath: /code/app
+              name: hapi-proxy-storage
+      restartPolicy: Always
+      volumes:
+        - name: hapi-proxy-storage
+          persistentVolumeClaim:
+            claimName: hapi-proxy-storage-vol-claim

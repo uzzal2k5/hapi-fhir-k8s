@@ -1,0 +1,34 @@
+---
+# Hapi-phir Storage data  volume
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: hapi-fhir-storage-vol
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: '/mnt/hapi-fhir/'     # Modify as per Requirement
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - minikube # Node Name
+---
+#Hapi-phir Storage data  volume Claim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: hapi-fhir-storage-vol-claim
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
