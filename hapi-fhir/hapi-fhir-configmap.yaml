@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hapi-fhir-config
+data:
+  DB_HOST: postgres-master  # Postgres Service Name
+  DATABASE_NAME: trumpet-node-data # Name of Database for Hapi-Fhir

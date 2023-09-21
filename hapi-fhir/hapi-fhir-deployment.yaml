@@ -20,9 +20,14 @@ spec:
         - name: hapi-fhir
           image: conceptant/hapi-fhir:latest # Update Image Name
           imagePullPolicy: "IfNotPresent"
+          envFrom:
+            - configMapRef:
+                name: hapi-fhir-config
+            - secretRef:
+                name: hapi-fhir-secrets
           ports:
             - containerPort: 8080
-          # Readiness and Liveness Probe
+          # Readiness and Live ness Probe
           readinessProbe:
             tcpSocket:
               port: 8080
